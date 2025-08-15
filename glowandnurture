@@ -1,0 +1,600 @@
+wholesomenutrition/
+├─ public/
+│  ├─ index.html
+│  ├─ styles.css
+│  ├─ app.js
+│  ├─ data/
+│  │  └─ recipes.json
+│  ├─ audio/
+│  │  └─ soft-click.mp3   (placeholder)
+│  └─ images/
+│     └─ (place your fruit / country / personal photos here)
+├─ server/
+│  ├─ server.js
+│  └─ package.json
+└─ README.md
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WholesomeNutrition — With love by Alina S.</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <h1>WholesomeNutrition</h1>
+      <p class="byline">With love by <span class="author-name">Alina S.</span></p>
+    </div>
+    <nav class="nav">
+      <a href="#" data-section="home">Home</a>
+      <a href="#" data-section="recipes">Recipes</a>
+      <a href="#" data-section="global">Exploring Daily Globe</a>
+      <a href="#" data-section="research">Research & Quotes</a>
+      <a href="#" data-section="contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- HOME -->
+    <section id="home" class="section active">
+      <div class="intro">
+        <h2>Gentle food for body & mind</h2>
+        <p>Daily simple recipes, nutritional facts, psychological insights, and songs to accompany each meal.</p>
+        <div class="quick-actions">
+          <button id="random-mood-btn" class="btn">Surprise me (by mood)</button>
+          <button id="fill-week-btn" class="btn alt">Plan my week (low-effort)</button>
+        </div>
+      </div>
+
+      <div class="widgets">
+        <div class="card">
+          <h3>BMI & Mood</h3>
+          <label>Weight (kg) <input id="weight" type="number" min="20" /></label>
+          <label>Height (cm) <input id="height" type="number" min="80" /></label>
+          <button id="calc-bmi" class="btn small">Calculate BMI</button>
+          <p id="bmi-result" class="muted"></p>
+          <hr/>
+          <h4>How are you feeling today?</h4>
+          <select id="mood-select">
+            <option value="neutral">Neutral</option>
+            <option value="joyful">Joyful</option>
+            <option value="calm">Calm</option>
+            <option value="sad">Sad</option>
+            <option value="stressed">Stressed</option>
+            <option value="romantic">Romantic</option>
+          </select>
+          <textarea id="mood-note" placeholder="Write one sentence about how you feel (optional)"></textarea>
+          <label><input id="mood-anonymous" type="checkbox" checked /> Share anonymously if you email me</label>
+        </div>
+
+        <div class="card">
+          <h3>Daily low-cost pick</h3>
+          <div id="budget-list" class="list small"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RECIPES -->
+    <section id="recipes" class="section">
+      <div class="section-header">
+        <h2>Recipes</h2>
+        <div class="filters">
+          <select id="diet-filter">
+            <option value="all">All</option>
+            <option value="vegan">Vegan</option>
+            <option value="lowcarb">Low carb</option>
+            <option value="normal">Normal</option>
+          </select>
+          <input id="search" placeholder="Search recipes..." />
+        </div>
+      </div>
+      <div id="recipes-grid" class="grid"></div>
+    </section>
+
+    <!-- GLOBAL -->
+    <section id="global" class="section">
+      <h2>Exploring Daily Globe</h2>
+      <p>A gentle tour around tastes and traditions, with psychological notes and a small funny note for each.</p>
+      <div id="global-list" class="grid"></div>
+    </section>
+
+    <!-- RESEARCH -->
+    <section id="research" class="section">
+      <h2>Research & Quotes</h2>
+      <p class="muted">This page is for sources, research summaries and the psychologists / nutritionists quoted on recipes. Add links and short notes here.</p>
+      <div id="research-content" class="card">
+        <h4>Starter sources (edit me)</h4>
+        <ul>
+          <li><em>Placeholder:</em> Add journal links, psychologists' quotes, books and articles here.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <h2>Contact</h2>
+      <p class="muted">If people want to email Alina privately they may use this contact form. Your email is not displayed publicly.</p>
+      <form id="contact-form" class="card">
+        <label>Your name (optional)<input name="name" /></label>
+        <label>Your message<textarea name="message" required></textarea></label>
+        <label>Your email (optional, so Alina can reply)<input name="replyTo" type="email" /></label>
+        <label><input name="shareMood" type="checkbox" /> I'm sharing mood & recipe suggestion (anonymous by default)</label>
+        <button type="submit" class="btn">Send message to Alina</button>
+        <p id="contact-status" class="muted"></p>
+      </form>
+      <div class="card small">
+        <h4>Photo</h4>
+        <p class="muted">Replace <code>public/images/alina.jpg</code> with your personal photo (not shown to the public email).</p>
+        <img src="images/alina.jpg" alt="Alina" style="max-width:150px;border-radius:8px"/>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>© <span id="year"></span> WholesomeNutrition — With love by <span class="author-name">Alina S.</span></small>
+  </footer>
+
+  <audio id="soft-click" src="audio/soft-click.mp3" preload="auto"></audio>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
+:root{
+  --bg: #ffffff;
+  --card: #f7f2ec; /* soft beige */
+  --accent: #f6dfe4; /* soft pink */
+  --accent2: #dff3e8; /* soft green */
+  --text: #212121;
+  --muted: #6b6b6b;
+  --radius: 12px;
+  --maxw: 1080px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.site-header{
+  width:100%;
+  max-width:var(--maxw);
+  padding:18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.brand h1{
+  margin:0;
+  font-weight:600;
+  letter-spacing:0.6px;
+}
+.byline{margin:4px 0 0 0; color:var(--muted); font-size:0.95rem}
+.nav a{
+  text-decoration:none;
+  color:var(--muted);
+  margin-left:12px;
+  font-weight:500;
+}
+main{
+  width:100%;
+  max-width:var(--maxw);
+  padding:12px 18px 80px;
+}
+.section{display:none}
+.section.active{display:block}
+.intro{background:linear-gradient(180deg, rgba(246,223,228,0.6), rgba(223,243,232,0.6)); padding:22px; border-radius:14px; margin-bottom:18px}
+.quick-actions{margin-top:12px}
+.btn{
+  background:var(--accent);
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  margin-right:8px;
+}
+.btn.alt{background:var(--accent2)}
+.btn.small{padding:6px 8px;font-size:.9rem}
+.muted{color:var(--muted)}
+.widgets{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+.card{background:var(--card);padding:14px;border-radius:var(--radius);flex:1;min-width:260px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
+.recipe-card{background:white;border-radius:12px;padding:12px;box-shadow:0 1px 0 rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.03)}
+.recipe-card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+.recipe-meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.small{font-size:.9rem}
+.section-header{display:flex;justify-content:space-between;align-items:center}
+.filters input, .filters select{padding:8px;border-radius:8px;border:1px solid #eee}
+footer.site-footer{width:100%;max-width:var(--maxw);padding:22px;text-align:center;color:var(--muted)}
+textarea{width:100%;min-height:70px;padding:8px;border-radius:8px;border:1px solid #eee;resize:vertical}
+label{display:block;margin-bottom:8px}
+.list.small{min-height:40px}
+.author-name{font-style:italic; font-weight:600}
+[
+  {
+    "id": "sunny-bowl",
+    "title": "Sunny Chickpea Bowl",
+    "diet": "vegan",
+    "country": "Morocco",
+    "image": "images/chickpea-bowl.jpg",
+    "cost_eur": 1.80,
+    "calories": 420,
+    "ingredients": ["chickpeas", "tomato", "couscous", "mint", "lemon"],
+    "directions": "Mix warmed chickpeas with couscous, fresh tomato and mint. Dress with lemon & olive oil.",
+    "vitamins": ["Vitamin C", "Folate", "Vitamin B6"],
+    "medical_facts": "Chickpeas provide fiber that supports blood sugar balance and gut health.",
+    "psychological_facts": "Rich, tactile meals (warm grains + herbs) can increase comfort and reduce stress appetite.",
+    "quote": "Food is the quickest path to the heart.","quote_author":"Local Moroccan proverb",
+    "song": {"title":"Wouldn't It Be Nice","artist":"The Beach Boys (1966)"},
+    "funny_note": "This bowl is sunshine-approved — sunglasses optional."
+  },
+  {
+    "id": "green-smoothie",
+    "title": "Green Calm Smoothie",
+    "diet": "lowcarb",
+    "country": "Japan",
+    "image": "images/green-smoothie.jpg",
+    "cost_eur": 2.20,
+    "calories": 290,
+    "ingredients": ["spinach", "matcha", "almond milk", "banana"],
+    "directions": "Blend all until silky smooth. Serve chilled.",
+    "vitamins": ["Vitamin K", "Vitamin A", "Vitamin C"],
+    "medical_facts": "Matcha contains L-theanine which can promote calm alertness.",
+    "psychological_facts": "Green drinks are often associated with 'detox' rituals which can feel renewing and hopeful.",
+    "quote": "Calmness in a cup.","quote_author":"Dr. Naomi Tanaka",
+    "song": {"title":"Linger","artist":"The Cranberries (1993)"},
+    "funny_note": "Greens that taste like a hug."
+  },
+  {
+    "id": "classic-pasta",
+    "title": "Easy Tomato Pasta",
+    "diet": "normal",
+    "country": "Italy",
+    "image": "images/tomato-pasta.jpg",
+    "cost_eur": 1.50,
+    "calories": 650,
+    "ingredients": ["pasta", "tomato", "garlic", "basil", "olive oil"],
+    "directions": "Cook pasta, toss with garlicky tomato sauce and basil.",
+    "vitamins": ["Vitamin C", "Vitamin E", "Vitamin K"],
+    "medical_facts": "Tomatoes contain lycopene, an antioxidant linked to heart health.",
+    "psychological_facts": "Carb-rich comfort meals can boost serotonin signaling and mood temporarily.",
+    "quote": "Simplicity, served warm.","quote_author":"Alina S.",
+    "song": {"title":"Careless Whisper","artist":"George Michael (1984)"},
+    "funny_note": "Pasta doesn't judge — it hugs your fork."
+  }
+]
+[
+  {
+    "id": "sunny-bowl",
+    "title": "Sunny Chickpea Bowl",
+    "diet": "vegan",
+    "country": "Morocco",
+    "image": "images/chickpea-bowl.jpg",
+    "cost_eur": 1.80,
+    "calories": 420,
+    "ingredients": ["chickpeas", "tomato", "couscous", "mint", "lemon"],
+    "directions": "Mix warmed chickpeas with couscous, fresh tomato and mint. Dress with lemon & olive oil.",
+    "vitamins": ["Vitamin C", "Folate", "Vitamin B6"],
+    "medical_facts": "Chickpeas provide fiber that supports blood sugar balance and gut health.",
+    "psychological_facts": "Rich, tactile meals (warm grains + herbs) can increase comfort and reduce stress appetite.",
+    "quote": "Food is the quickest path to the heart.","quote_author":"Local Moroccan proverb",
+    "song": {"title":"Wouldn't It Be Nice","artist":"The Beach Boys (1966)"},
+    "funny_note": "This bowl is sunshine-approved — sunglasses optional."
+  },
+  {
+    "id": "green-smoothie",
+    "title": "Green Calm Smoothie",
+    "diet": "lowcarb",
+    "country": "Japan",
+    "image": "images/green-smoothie.jpg",
+    "cost_eur": 2.20,
+    "calories": 290,
+    "ingredients": ["spinach", "matcha", "almond milk", "banana"],
+    "directions": "Blend all until silky smooth. Serve chilled.",
+    "vitamins": ["Vitamin K", "Vitamin A", "Vitamin C"],
+    "medical_facts": "Matcha contains L-theanine which can promote calm alertness.",
+    "psychological_facts": "Green drinks are often associated with 'detox' rituals which can feel renewing and hopeful.",
+    "quote": "Calmness in a cup.","quote_author":"Dr. Naomi Tanaka",
+    "song": {"title":"Linger","artist":"The Cranberries (1993)"},
+    "funny_note": "Greens that taste like a hug."
+  },
+  {
+    "id": "classic-pasta",
+    "title": "Easy Tomato Pasta",
+    "diet": "normal",
+    "country": "Italy",
+    "image": "images/tomato-pasta.jpg",
+    "cost_eur": 1.50,
+    "calories": 650,
+    "ingredients": ["pasta", "tomato", "garlic", "basil", "olive oil"],
+    "directions": "Cook pasta, toss with garlicky tomato sauce and basil.",
+    "vitamins": ["Vitamin C", "Vitamin E", "Vitamin K"],
+    "medical_facts": "Tomatoes contain lycopene, an antioxidant linked to heart health.",
+    "psychological_facts": "Carb-rich comfort meals can boost serotonin signaling and mood temporarily.",
+    "quote": "Simplicity, served warm.","quote_author":"Alina S.",
+    "song": {"title":"Careless Whisper","artist":"George Michael (1984)"},
+    "funny_note": "Pasta doesn't judge — it hugs your fork."
+  }
+]
+// Minimal JS for interactivity
+const state = {
+  recipes: [],
+  current: null
+};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  document.getElementById('year').textContent = new Date().getFullYear();
+  await loadRecipes();
+  setupNav();
+  setupUI();
+  renderRecipes(state.recipes);
+  renderBudgetList();
+});
+
+async function loadRecipes(){
+  const res = await fetch('data/recipes.json');
+  state.recipes = await res.json();
+}
+
+function setupNav(){
+  document.querySelectorAll('.nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const section = a.dataset.section;
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(section).classList.add('active');
+    });
+  });
+  // default show home
+  document.getElementById('home').classList.add('active');
+}
+
+function setupUI(){
+  document.getElementById('random-mood-btn').addEventListener('click', randomByMood);
+  document.getElementById('fill-week-btn').addEventListener('click', fillWeek);
+  document.getElementById('calc-bmi').addEventListener('click', calcBMI);
+
+  document.getElementById('diet-filter').addEventListener('change', (e) => {
+    const val = e.target.value;
+    const list = val === 'all' ? state.recipes : state.recipes.filter(r => r.diet === val);
+    renderRecipes(list);
+  });
+
+  document.getElementById('search').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase();
+    const list = state.recipes.filter(r => r.title.toLowerCase().includes(q) || r.ingredients.join(' ').toLowerCase().includes(q));
+    renderRecipes(list);
+  });
+
+  document.getElementById('contact-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const form = ev.target;
+    const data = {
+      name: form.name.value,
+      replyTo: form.replyTo.value,
+      message: form.message.value,
+      shareMood: form.shareMood.checked
+    };
+    const status = document.getElementById('contact-status');
+    status.textContent = 'Sending...';
+    try {
+      const res = await fetch('/api/contact', {
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body: JSON.stringify(data)
+      });
+      const body = await res.json();
+      status.textContent = body.ok ? 'Message sent. Thank you!' : 'Failed to send. Try later.';
+      form.reset();
+    } catch(err){
+      status.textContent = 'Error sending message.';
+      console.error(err);
+    }
+  });
+}
+
+function renderRecipes(list){
+  const grid = document.getElementById('recipes-grid');
+  grid.innerHTML = '';
+  list.forEach(r => {
+    const card = document.createElement('article');
+    card.className = 'recipe-card';
+    card.innerHTML = `
+      <img src="${r.image}" alt="${r.title}" onerror="this.style.opacity=.4;this.src='images/placeholder.jpg'"/>
+      <h3>${r.title}</h3>
+      <p class="muted small">${r.country} • ${r.diet}</p>
+      <p class="small">${r.ingredients.slice(0,5).join(', ')}${r.ingredients.length>5?'…':''}</p>
+      <div class="recipe-meta">
+        <span class="small">Calories: ${r.calories}</span>
+        <span class="small">${r.cost_eur < 2 ? '€' + r.cost_eur.toFixed(2) + ' • low-cost' : '€' + r.cost_eur.toFixed(2)}</span>
+      </div>
+      <button class="btn small" data-id="${r.id}">Open</button>
+    `;
+    grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('button[data-id]').forEach(btn => {
+    btn.addEventListener('click', () => openRecipe(btn.dataset.id));
+  });
+}
+
+function openRecipe(id){
+  const r = state.recipes.find(x => x.id === id);
+  if(!r) return;
+  state.current = r;
+  // show modal-like quick view (simple)
+  const win = window.open('', '_blank', 'width=520,height=720');
+  win.document.write(`
+    <html><head><title>${r.title}</title>
+    <link rel="stylesheet" href="/styles.css">
+    </head><body style="padding:18px;font-family:Inter,Arial;">
+      <h2>${r.title}</h2>
+      <p class="muted">${r.country} • ${r.diet}</p>
+      <img src="${r.image}" alt="${r.title}" style="width:100%;height:220px;object-fit:cover;border-radius:12px"/>
+      <h4>Ingredients</h4><p>${r.ingredients.join(', ')}</p>
+      <h4>Directions</h4><p>${r.directions}</p>
+      <h4>Vitamins</h4><p>${r.vitamins.join(', ')}</p>
+      <h4>Medical facts</h4><p>${r.medical_facts}</p>
+      <h4>Psychological notes</h4><p>${r.psychological_facts}</p>
+      <h4>Quote</h4><blockquote>"${r.quote}" — ${r.quote_author}</blockquote>
+      <h4>Song</h4><p>${r.song.title} — ${r.song.artist}</p>
+    </body></html>
+  `);
+}
+
+function calcBMI(){
+  const w = parseFloat(document.getElementById('weight').value);
+  const h = parseFloat(document.getElementById('height').value);
+  const out = document.getElementById('bmi-result');
+  if(!w || !h){ out.textContent = 'Please enter height and weight.'; return; }
+  const bmi = (w / ((h/100)*(h/100)));
+  out.textContent = `Your BMI is ${bmi.toFixed(1)}. (${bmi < 18.5 ? 'underweight' : bmi < 25 ? 'healthy' : bmi < 30 ? 'overweight' : 'obese'})`;
+}
+
+function randomByMood(){
+  const mood = document.getElementById('mood-select').value;
+  // simple mapping
+  const mapping = {
+    joyful: r => r.diet === 'normal' || r.title.toLowerCase().includes('sunny'),
+    calm: r => r.vitamins.includes('Vitamin K') || r.title.toLowerCase().includes('smoothie'),
+    sad: r => r.calories > 400,
+    stressed: r => r.vitamins.includes('Vitamin C'),
+    romantic: r => r.song && r.song.artist,
+    neutral: () => true
+  };
+  const candidates = state.recipes.filter(r => mapping[mood](r));
+  const pick = candidates[Math.floor(Math.random()*candidates.length)];
+  // play soft click
+  const s = document.getElementById('soft-click');
+  if(s) s.play();
+  if(pick) openRecipe(pick.id);
+}
+
+function fillWeek(){
+  // picks 7 simple recipes (rotating)
+  const week = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  const out = week.map((d,i) => `<li><strong>${d}</strong>: ${state.recipes[i % state.recipes.length].title}</li>`).join('');
+  const w = window.open('', '_blank', 'width=420,height=520');
+  w.document.write(`<html><head><link rel="stylesheet" href="/styles.css"></head><body style="padding:18px"><h3>Your week</h3><ul>${out}</ul></body></html>`);
+}
+
+function renderBudgetList(){
+  const list = document.getElementById('budget-list');
+  const low = state.recipes.filter(r => r.cost_eur < 2.0);
+  if(low.length === 0){ list.innerHTML = '<em>No low-cost recipes yet.</em>'; return; }
+  list.innerHTML = low.map(r => `<div>${r.title} — €${r.cost_eur.toFixed(2)}</div>`).join('');
+}
+{
+  "name": "wholesomenutrition-server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.1",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2"
+  }
+}
+const express = require('express');
+const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
+const cors = require('cors');
+const path = require('path');
+
+const app = express();
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+// Endpoint for contact form
+app.post('/api/contact', async (req, res) => {
+  const { name, replyTo, message, shareMood } = req.body || {};
+  if(!message || message.trim().length < 3){
+    return res.status(400).json({ ok: false, error: 'Message required' });
+  }
+
+  // Ensure environment variables are set. DO NOT hardcode your email here.
+  const RECEIVER_EMAIL = process.env.RECEIVER_EMAIL; // set this to your private email
+  const EMAIL_HOST = process.env.EMAIL_HOST;
+  const EMAIL_PORT = process.env.EMAIL_PORT;
+  const EMAIL_USER = process.env.EMAIL_USER;
+  const EMAIL_PASS = process.env.EMAIL_PASS;
+
+  if(!RECEIVER_EMAIL || !EMAIL_HOST || !EMAIL_USER || !EMAIL_PASS){
+    console.error('Missing email environment variables');
+    return res.status(500).json({ ok: false, error: 'Server not configured to send email' });
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: EMAIL_HOST,
+    port: Number(EMAIL_PORT) || 587,
+    secure: false,
+    auth: {
+      user: EMAIL_USER,
+      pass: EMAIL_PASS
+    }
+  });
+
+  const mail = {
+    from: `"WholesomeNutrition" <${EMAIL_USER}>`,
+    to: RECEIVER_EMAIL,
+    subject: `Contact form: ${name || 'Anonymous'}`,
+    text: `Message: ${message}\n\nReply-to: ${replyTo || 'Not provided'}\nShareMood: ${shareMood}\n\n---\nSent from WholesomeNutrition contact form.`
+  };
+
+  try {
+    await transporter.sendMail(mail);
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error('Email send error', err);
+    return res.status(500).json({ ok: false, error: 'Failed to send' });
+  }
+});
+
+// fallback to static
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, '..', 'public', 'index.html')));
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server listening on ${PORT}`));
+# WholesomeNutrition — With love by Alina S.
+
+## Local setup
+1. Copy this repo to your machine.
+2. Put your images in `public/images/`:
+   - `alina.jpg` (your personal photo)
+   - recipe photos (match names used in `data/recipes.json`)
+   - `placeholder.jpg` for fallbacks
+3. Add a soft click sound to `public/audio/soft-click.mp3`.
+4. Install server dependencies:
+5. Create environment variables (example `.env`) or export:
+- `RECEIVER_EMAIL` = your private email (do not commit this)
+- `EMAIL_HOST` (e.g., smtp.gmail.com for Gmail but see provider docs)
+- `EMAIL_PORT`
+- `EMAIL_USER`
+- `EMAIL_PASS`
+6. Start server:
+7. Visit `http://localhost:3000`
+
+## Deploy suggestions
+- Frontend + backend together: use Render.com, Railway.app, or a VPS. Push whole repository to GitHub and connect the repo to Render; set environment variables in the service UI.
+- If you prefer a static frontend with serverless contact function:
+- Host `public/` on GitHub Pages, Netlify or Vercel, and use a serverless function (Netlify Functions, Vercel Serverless) for `/api/contact` with the same logic and environment variables.
+- Keep RECEIVER_EMAIL private: only set it in cloud env settings.
+
+## GitHub
+- Create a repo called `wholesomenutrition` or `wholesomenutrition-alina`.
+- Push all files, but DO NOT commit files with secrets (no `.env`).
+
